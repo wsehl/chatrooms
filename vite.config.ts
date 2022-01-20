@@ -4,6 +4,11 @@ import vue from "@vitejs/plugin-vue";
 
 export default defineConfig({
   root: "./client",
+  server: {
+    proxy: {
+      "/socket/": "http://localhost:8081/socket/",
+    },
+  },
   plugins: [vue()],
   resolve: {
     alias: {

@@ -25,11 +25,13 @@
   "dependencies": {
     "express": "^4.17.2",
     "socket.io": "^4.4.1",
+    "socket.io-client": "^4.4.1",
     "vue": "^3.2.27",
     "vue-router": "^4.0.12"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.0",
+    "@types/express": "^4.17.13",
     "@types/node": "^16.11.21",
     "@vitejs/plugin-vue": "^2.0.1",
     "@vue/eslint-config-prettier": "^7.0.0",

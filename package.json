@@ -1,37 +1,23 @@
 {
-  "version": "0.0.1",
+  "version": "1.0.0",
   "scripts": {
     "dev:client": "vite",
     "build:client": "vue-tsc --noEmit && vite build",
     "preview": "vite preview --port 5050",
-    "dev:server": "nodemon",
-    "build:server": "rimraf dist/server && tsc -p tsconfig.server.json",
-    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
-    "build": "concurrently \"npm run build:server\" \"npm run build:client\"",
+    "dev:server": "nodemon server/index.js",
+    "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "format": "prettier --write .",
-    "heroku-postbuild": "npm run build:server"
-  },
-  "nodemonConfig": {
-    "watch": [
-      "./server/"
-    ],
-    "ext": "ts",
-    "ignore": [
-      "**/*.test.ts"
-    ],
-    "exec": "ts-node --project ./tsconfig.server.json --files ./server/index.ts"
+    "heroku-postbuild": "echo Skip builds on Heroku"
   },
   "dependencies": {
-    "express": "^4.17.2",
+    "@vueuse/core": "^7.5.3",
     "socket.io": "^4.4.1",
     "socket.io-client": "^4.4.1",
-    "vue": "^3.2.27",
-    "vue-router": "^4.0.12"
+    "vue": "^3.2.27"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.0",
-    "@types/express": "^4.17.13",
     "@types/node": "^16.11.21",
     "@vitejs/plugin-vue": "^2.0.1",
     "@vue/eslint-config-prettier": "^7.0.0",
@@ -45,6 +31,8 @@
     "ts-node": "^10.4.0",
     "typescript": "~4.5.4",
     "vite": "^2.7.13",
-    "vue-tsc": "^0.29.8"
+    "vite-plugin-windicss": "^1.6.3",
+    "vue-tsc": "^0.29.8",
+    "windicss": "^3.4.3"
   }
 }

@@ -1,11 +1,11 @@
 {
   "version": "1.0.0",
   "scripts": {
-    "dev:client": "vite",
-    "build:client": "vue-tsc --noEmit && vite build",
+    "client": "vite",
+    "build": "vite build",
     "preview": "vite preview --port 5050",
-    "dev:server": "nodemon server/index.js",
-    "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
+    "server": "nodemon server/index.js",
+    "dev": "concurrently \"npm run client\" \"npm run server\"",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "format": "prettier --write .",
     "heroku-postbuild": "echo Skip builds on Heroku"

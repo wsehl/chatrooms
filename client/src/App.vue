@@ -87,7 +87,6 @@ if (store.value.username) {
 }
 window.onbeforeunload = () => {
   socket.disconnect();
-  store.value.username = "";
 };
 
 watch(messageInput, () => {
@@ -244,7 +243,14 @@ socket.io.on("reconnect_error", () => {
       <div class="md:w-1/5 p-2 dark:bg-dark-700 bg-gray-100">
         <span class="font-semibold">online</span>
         <ul class="w-full flex flex-col mt-1.5">
-          <li class="leading-5" v-for="user in users">{{ user }}</li>
+          <template v-if="users.length">
+            <li class="leading-5" v-for="user in users" :key="user">
+              {{ user }}
+            </li>
+          </template>
+          <template v-else>
+            <span class="font-light leading-5"> no one here </span>
+          </template>
         </ul>
       </div>
     </section>

@@ -260,7 +260,9 @@ socket.io.on("reconnect_error", () => {
       <button class="btn-default" @click="toggleDark()">
         {{ isDark ? "Dark" : "Light" }}
       </button>
-      <button class="btn-danger" @click="exitChat()">Logout</button>
+      <button v-if="connected" class="btn-danger" @click="exitChat()">
+        Logout
+      </button>
     </div>
   </footer>
 </template>

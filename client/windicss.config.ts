@@ -4,7 +4,7 @@ import colors from "windicss/colors";
 export default defineConfig({
   darkMode: "class",
   shortcuts: {
-    "default-focus": "outline-none focus:outline-none",
+    "default-focus": "outline-none focus-visible:ring-1 focus:outline-none",
     btn: "default-focus rounded-full px-3 py-1 w-auto disabled:cursor-not-allowed",
     "btn-default": "btn dark:bg-gray-700-spotify bg-gray-100",
     "btn-danger": "btn bg-red-500 !text-white",

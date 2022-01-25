@@ -1,4 +1,4 @@
-export const TYPING_TIMER_LENGTH: number = 400;
+export const TYPING_TIMER_LENGTH = 400;
 
 export const COLORS = [
   "#e21400",

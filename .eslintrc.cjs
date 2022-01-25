@@ -17,7 +17,7 @@ module.exports = {
   },
   rules: {
     "vue/multi-word-component-names": [
-      "warning",
+      0,
       {
         ignores: ["default"],
       },

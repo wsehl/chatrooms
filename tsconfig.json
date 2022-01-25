@@ -12,16 +12,9 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "paths": {
-      "@/*": [
-        "client/src/*"
-      ]
+      "@/*": ["client/src/*"]
     },
-    "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable",
-      "scripthost"
-    ],
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost"],
     "skipLibCheck": true
   },
   "include": [

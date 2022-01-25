@@ -14,85 +14,96 @@ server.listen(PORT, () => {
   console.log("Server listening at port %d", PORT);
 });
 
-const activeUsers = new Set();
-const typingUsers = new Set();
+const {
+  userJoin,
+  getCurrentUser,
+  userLeave,
+  getRoomUsers,
+  getTypingUsers,
+} = require("./utils/users");
 
 io.on("connection", (socket) => {
-  let addedUser = false;
-
-  const sendMessage = ({ message, type = "default" }) => {
-    const newMessage = {
-      username: socket.username,
-      message,
+  socket.on("joinRoom", ({ username, room }) => {
+    const user = userJoin(socket.id, username, room);
+    socket.join(user.room);
+    socket.emit("message", {
+      message: "Welcome to chatroom!",
+      type: "system",
       date: new Date().toISOString(),
-      type,
-    };
-    socket.emit("new message", newMessage);
-    socket.broadcast.emit("new message", newMessage);
-  };
-
-  socket.on("init", () => {
-    const data = {
-      activeUsers: [...activeUsers],
-    };
-    socket.emit("get users", data);
-    socket.broadcast.emit("get users", data);
-  });
-
-  socket.on("new message", (data) => {
-    sendMessage({ message: data });
-  });
-
-  socket.on("add user", (username) => {
-    if (addedUser) return;
-    socket.username = username;
-    activeUsers.add(username);
-    addedUser = true;
-    socket.emit("login", {
-      activeUsers: [...activeUsers],
     });
-    socket.broadcast.emit("user joined", {
-      username: socket.username,
-      activeUsers: [...activeUsers],
+    socket.emit("login");
+    socket.broadcast.to(user.room).emit("message", {
+      message: `${user.username} has joined the chat`,
+      type: "system",
+      date: new Date().toISOString(),
+    });
+    io.to(user.room).emit("roomUsers", {
+      room: user.room,
+      users: getRoomUsers(user.room),
     });
   });
 
-  const logout = () => {
-    if (addedUser) {
-      activeUsers.delete(socket.username);
-      socket.emit("user left", {
-        username: socket.username,
-        activeUsers: [...activeUsers],
+  socket.on("chatMessage", (msg) => {
+    const user = getCurrentUser(socket.id);
+    if (user) {
+      io.to(user.room).emit("message", {
+        username: user.username,
+        message: msg,
+        type: "default",
+        date: new Date().toISOString(),
       });
-      socket.broadcast.emit("user left", {
-        username: socket.username,
-        activeUsers: [...activeUsers],
-      });
-      addedUser = false;
     }
-  };
+  });
 
-  socket.on("logout", () => {
-    logout();
+  socket.on("change room", (room) => {
+    const user = getCurrentUser(socket.id);
+    if (user) {
+      user.room = room;
+      socket.join(room);
+      io.to(user.room).emit("message", {
+        message: `${user.username} has changed the room`,
+        type: "system",
+        date: new Date().toISOString(),
+      });
+      io.to(user.room).emit("roomUsers", {
+        room: user.room,
+        users: getRoomUsers(user.room),
+      });
+    }
   });
 
   socket.on("disconnect", () => {
-    logout();
+    const user = userLeave(socket.id);
+    if (user) {
+      io.to(user.room).emit("message", {
+        message: `${user.username} has left the chat`,
+        type: "system",
+        date: new Date().toISOString(),
+      });
+      io.to(user.room).emit("roomUsers", {
+        room: user.room,
+        users: getRoomUsers(user.room),
+      });
+    }
   });
 
   socket.on("typing", () => {
-    typingUsers.add(socket.username);
-    socket.broadcast.emit("typing", {
-      username: socket.username,
-      typingUsers: [...typingUsers],
-    });
+    const user = getCurrentUser(socket.id);
+    if (user) {
+      user.typing = true;
+      io.to(user.room).emit("typing", {
+        typingUsers: getTypingUsers(),
+      });
+    }
   });
 
   socket.on("stop typing", () => {
-    typingUsers.delete(socket.username);
-    socket.broadcast.emit("stop typing", {
-      username: socket.username,
-      typingUsers: [...typingUsers],
-    });
+    const user = getCurrentUser(socket.id);
+    if (user) {
+      user.typing = false;
+      io.to(user.room).emit("stop typing", {
+        typingUsers: getTypingUsers(),
+      });
+    }
   });
 });
